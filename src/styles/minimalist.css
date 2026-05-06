@@ -1,0 +1,1963 @@
+/* --------------------------------------------------------------------------
+   Fonts (helvetica-255 — local files only)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Helvetica";
+  font-style: normal;
+  font-weight: 300;
+  src: url("/helvetica-255/helvetica-light-587ebe5a59211.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/helvetica-255/Helvetica.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  font-style: normal;
+  font-weight: 500;
+  src: url("/helvetica-255/Helvetica.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  font-style: normal;
+  font-weight: 700;
+  src: url("/helvetica-255/Helvetica-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  font-style: italic;
+  font-weight: 400;
+  src: url("/helvetica-255/Helvetica-Oblique.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  font-style: italic;
+  font-weight: 700;
+  src: url("/helvetica-255/Helvetica-BoldOblique.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Helvetica Compressed";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/helvetica-255/helvetica-compressed-5871d14b6903a.otf") format("opentype");
+}
+
+/* --------------------------------------------------------------------------
+   Base (homepage + intro only)
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background-color: #edeae4;
+  font-size: 62.5%;
+  height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  color: #28282a;
+  font-family: "Helvetica";
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.6;
+  overscroll-behavior: none;
+}
+
+@media (max-width: 960px), (hover: none), (pointer: coarse) {
+  html,
+  body {
+    overscroll-behavior-y: auto;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+main {
+  display: block;
+}
+
+#content {
+  min-height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Site shell + intro zoom target
+   -------------------------------------------------------------------------- */
+.site {
+  background-color: transparent;
+  height: auto;
+  position: relative;
+  width: 100%;
+  z-index: 2;
+  transition: transform 1300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+body.intro-active .site {
+  transform: translateY(var(--intro-translate-y, 0px))
+    scale(var(--intro-scale, 0.24));
+  transform-origin: top center;
+  will-change: transform;
+}
+
+/* Hide .site until applyIntroZoomFit has set the CSS variables via inline style.
+   Once the style attribute contains --intro-translate-y the selector no longer
+   matches and the element becomes visible — zero flash, correct position. */
+body.intro-active .site:not([style*="--intro-translate-y"]) {
+  opacity: 0;
+}
+
+body.intro-active.intro-ready .site {
+  transform: translateY(0) scale(1);
+  transform-origin: top center;
+}
+
+body.intro-active:not(.intro-ready) .site {
+  transition: none;
+}
+
+/* Kill the transition the instant intro-active is removed so the lingering
+   transform property doesn't break position:fixed on the header. */
+body:not(.intro-active) .site {
+  transition: none;
+}
+
+/* --------------------------------------------------------------------------
+   Viewport chrome (outside .site)
+   -------------------------------------------------------------------------- */
+.intro-side-brand {
+  color: #28282a;
+  display: flex;
+  flex-direction: column;
+  font-family: "Helvetica";
+  font-size: clamp(12px, 2vw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.28;
+  pointer-events: none;
+  position: fixed;
+  right: clamp(8px, 2.5vw, 22px);
+  top: 50%;
+  transition: opacity 450ms ease;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.label-global {
+  bottom: clamp(10px, 2vw, 20px);
+  color: #28282a;
+  display: block !important;
+  font-family: "Helvetica";
+  font-size: clamp(9px, 0.75vw, 12px);
+  font-weight: 700;
+  left: clamp(10px, 2vw, 20px);
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  max-width: none;
+  pointer-events: none;
+  position: fixed;
+  white-space: nowrap;
+  width: auto;
+  transition: opacity 450ms ease;
+  z-index: 1;
+}
+
+body.intro-ready .intro-side-brand,
+body.intro-ready .label-global,
+body:not(.intro-active) .intro-side-brand,
+body:not(.intro-active) .label-global {
+  opacity: 0;
+}
+
+@media (max-width: 960px) {
+  .label-global {
+    font-size: 8px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Header
+   -------------------------------------------------------------------------- */
+#site-header {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  left: 0;
+  padding: 27px 20px;
+  position: fixed;
+  top: 0;
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
+  z-index: 10;
+}
+
+/* During the intro zoom, header is absolutely positioned inside .site so it
+   scales with the page. The moment intro-active is removed (same tick scrolling
+   is enabled), position:fixed takes over with zero visual jump because .site's
+   transform is already at scale(1) by then. */
+body.intro-active #site-header {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+body.intro-active:not(.intro-header-in) #site-header {
+  opacity: 0;
+  transform: translate3d(0, -18px, 0);
+}
+
+body.intro-active.intro-header-in #site-header,
+body:not(.intro-active) #site-header {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+body.intro-ready #site-header {
+  opacity: 1;
+}
+
+#site-header .site-header__left,
+#site-header .site-header__right {
+  flex: 1;
+  position: relative;
+  top: -4px;
+}
+
+#site-header .site-header__right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#site-header h2,
+#site-header h2 a,
+#site-header h2 span,
+#site-header .header-info {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+#site-header .header-nav a {
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.8333;
+  position: relative;
+}
+
+
+#site-header .menu-dot-container {
+  display: inline-block;
+  line-height: 0;
+  position: relative;
+  transform-origin: 14px 10px;
+}
+
+#site-header .menu-dot-container .menu-dot {
+  display: inline-block;
+  height: 16px;
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+  width: 16px;
+}
+
+#site-header .menu-dot-container .menu-dot circle {
+  animation: statusPulse 2s ease-in-out infinite;
+  fill: #000;
+  transform-origin: 50% 50%;
+}
+
+@keyframes statusPulse {
+  0%,
+  5%,
+  100% {
+    fill: #000;
+    opacity: 0.85;
+  }
+  30%,
+  75% {
+    fill: #3ea964;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 960px) {
+  #site-header .menu-dot-container {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  #site-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 17px 10px;
+  }
+
+  #site-header .header-nav {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-top: 20px;
+    order: 3;
+  }
+
+  #site-header .header-nav a[href] {
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    opacity: 1;
+  }
+
+  #site-header .header-nav a:not([href]) {
+    display: none;
+  }
+
+  #site-header .site-header__left,
+  #site-header .site-header__right {
+    flex-basis: auto;
+    flex-grow: 0;
+    top: 0;
+  }
+
+  #site-header h2,
+  #site-header h2 a,
+  #site-header h2 span,
+  #site-header .header-info {
+    font-size: 1.6rem;
+  }
+
+  #site-header .logo::after {
+    display: none;
+  }
+
+  #site-header .header-nav a {
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  /* ── Desktop-only header elements: hide on mobile ── */
+  #site-header .desktop-only-header {
+    display: none !important;
+  }
+
+  /* ── Mobile header wrap ── */
+  #site-header .mobile-header-wrap {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    align-items: center;
+    line-height: 1;
+  }
+
+  /* Two panels laid out side by side, each full-width */
+  #site-header .mobile-panel {
+    display: flex;
+    flex-shrink: 0;
+    width: 100%;
+    align-items: center;
+    transition: transform 0.52s cubic-bezier(0.77, 0, 0.175, 1);
+    will-change: transform;
+  }
+
+  /* Default panel: name + location/time on left, MENU on right */
+  #site-header .mobile-panel-default {
+    justify-content: space-between;
+    transform: translateX(0);
+  }
+
+  /* Nav panel: starts off-screen to the right */
+  #site-header .mobile-panel-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transform: translateX(100%);
+    justify-content: space-between;
+  }
+
+  /* When nav is open: default slides left, nav slides into view */
+  #site-header .mobile-header-wrap.nav-open .mobile-panel-default {
+    transform: translateX(-100%);
+  }
+
+  #site-header .mobile-header-wrap.nav-open .mobile-panel-nav {
+    transform: translateX(0);
+  }
+
+  /* Identity text — inherits font from existing h2/.header-info rules */
+  #site-header .mobile-identity {
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #site-header .mobile-identity .header-info,
+  #site-header .mobile-identity .header-info a,
+  #site-header .mobile-identity .header-info span {
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #site-header .mobile-identity .menu-dot-container {
+    display: inline-block;
+  }
+
+  /* MENU button — same type style as identity */
+  #site-header .mobile-menu-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  /* BACK button — same type style */
+  #site-header .mobile-back-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  /* Nav links row */
+  #site-header .mobile-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  #site-header .mobile-nav-links a {
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+/* Desktop: hide mobile header */
+@media (min-width: 961px) {
+  #site-header .mobile-header-wrap {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Intro: content fades (inside .site)
+   -------------------------------------------------------------------------- */
+body.intro-active {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.intro-active #site-footer,
+body.intro-active .grid__item-content,
+body.intro-active .credit-link {
+  opacity: 0;
+  will-change: opacity;
+}
+
+body.intro-active #homepage .grid__animation-wrapper {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+body.intro-active.intro-unveiled #homepage .grid__animation-wrapper {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.intro-active.intro-header-in #site-footer,
+body.intro-active.intro-header-in .grid__item-content,
+body.intro-active.intro-header-in .credit-link {
+  opacity: 1;
+}
+
+#site-footer,
+.grid__item-content,
+.credit-link {
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.grid__item-image,
+#homepage .grid__animation-wrapper {
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.intro-ready #site-footer {
+  opacity: 1;
+}
+
+/* After intro, keep page visible (do not rely on .intro-ready — that class is removed). */
+body:not(.intro-active) .page-wrapper {
+  opacity: 1;
+  visibility: visible;
+}
+
+body:not(.intro-active) #site-footer {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Homepage
+   -------------------------------------------------------------------------- */
+.page-wrapper {
+  opacity: 1;
+  transition: opacity 0ms;
+  visibility: visible;
+}
+
+#homepage {
+  background-color: transparent;
+  position: relative;
+}
+
+body.intro-active:not(.intro-unveiled) #homepage {
+  background-color: transparent;
+}
+
+#homepage .scroll-wrapper {
+  background-color: transparent;
+}
+
+#homepage .container {
+  padding: 6.6vw 20px 12vw;
+  position: relative;
+}
+
+@media (max-width: 960px) {
+  #homepage .container {
+    padding: 74px 10px 90px;
+  }
+}
+
+.title {
+  position: relative;
+  z-index: 30;
+  display: block;
+}
+
+#homepage .title {
+  font-size: min(37vw, calc((100vw - 40px) / 3.08), 680px);
+  font-weight: 700;
+  letter-spacing: -0.075em;
+  line-height: 0.8;
+  margin: 0 0 calc(-1.35vw + 25px);
+  text-align: center;
+  width: max-content;
+  max-width: none;
+  left: 50%;
+  transform: translateX(calc(-50% - 0.05em));
+}
+
+@media (max-width: 960px) {
+  #homepage .title {
+    font-size: clamp(1px, 30vw, 390px);
+    margin: 0 0 calc(-1.35vw + 15px);
+    width: fit-content;
+    max-width: calc(100vw - 20px);
+    transform: translateX(calc(-50% - 0.05em));
+  }
+}
+
+#homepage .title--bottom {
+  margin-bottom: 0;
+  margin-top: calc(-1vw + 25px);
+}
+
+/* --------------------------------------------------------------------------
+   About Me panel — sits on the right of the hero image inside the sticky frame
+   Mirrors .main-image-text-panel positioning so GSAP can crossfade between them
+   -------------------------------------------------------------------------- */
+.about-me-panel {
+  height: 100%;
+  opacity: 0;
+  padding: 0 4vw;
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  visibility: hidden;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 7;
+}
+
+.about-me-panel__inner {
+  width: 100%;
+  max-width: 640px;
+}
+
+.about-me-panel__label {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01rem;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.about-me-panel__lead {
+  font-size: clamp(1.35rem, 1.9vw, 2rem);
+  font-weight: 300;
+  letter-spacing: 0.005em;
+  line-height: 1.4;
+}
+
+.about-me-panel__intro {
+  font-size: clamp(1.1rem, 1.3vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-top: 28px;
+}
+
+.about-me-panel__list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: clamp(1.15rem, 1.45vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.about-me-panel__list li {
+  position: relative;
+  padding-left: 1.4em;
+}
+
+.about-me-panel__list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  opacity: 0.6;
+}
+
+.about-me-panel__current {
+  font-size: clamp(1.1rem, 1.4vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  margin-top: 28px;
+}
+
+@media (max-width: 960px) {
+  .about-me-panel {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    padding: 40px 20px;
+    z-index: 6;
+  }
+}
+
+@media (max-width: 960px) {
+  #homepage .title--bottom {
+    margin-top: calc(-1vw + 15px);
+  }
+}
+
+#homepage .credit-link {
+  font-size: 1rem;
+  font-weight: 500;
+  height: 18px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  top: 50%;
+  transform: rotate(-90deg) translateY(83px);
+  white-space: nowrap;
+  width: 180px;
+  z-index: 9;
+}
+
+@media (max-width: 960px) {
+  #homepage .credit-link {
+    display: none;
+  }
+}
+
+#homepage .grid__animation-wrapper {
+  position: relative;
+}
+
+.mobile-hero-bridge {
+  display: none;
+}
+
+/* Featured image: canvas shows through until gray base clip-reveals (no full-bleed overlay) */
+#homepage .grid__item .responsive-image.hero-featured-image {
+  background: transparent !important;
+}
+
+#homepage .hero-image-base {
+  background-color: #d4d1cb;
+  clip-path: inset(100% 0 0 0);
+  display: block;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+/* Gray “slides” on only inside the frame: clipped region stays transparent → canvas */
+body.intro-unveiled #homepage .hero-image-base {
+  animation: heroGrayReveal 950ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+body:not(.intro-active) #homepage .hero-image-base {
+  animation: none;
+  clip-path: inset(0 0 0 0);
+}
+
+@keyframes heroGrayReveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+#homepage .hero-featured-img {
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+  z-index: 3;
+}
+
+body.intro-active #homepage .hero-featured-img {
+  opacity: 0;
+  will-change: opacity;
+}
+
+body.intro-active.intro-header-in #homepage .hero-featured-img,
+body:not(.intro-active) #homepage .hero-featured-img {
+  opacity: 1;
+}
+
+#homepage .grid {
+  align-items: flex-end;
+  display: flex;
+  flex-flow: row wrap;
+  flex: 0 1 auto;
+  justify-content: space-between;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+@media (max-width: 960px) {
+  #homepage .grid {
+    justify-content: flex-start;
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+}
+
+#homepage .grid__item--featured {
+  cursor: default;
+}
+
+#homepage .grid--layout-0 .grid__item--featured {
+  flex-basis: 100%;
+  margin-bottom: 0;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  #homepage .grid--layout-0 .grid__item--featured {
+    flex-basis: calc(100% - 10px);
+    margin-left: 5px;
+    margin-right: 5px;
+    width: calc(100% - 10px);
+  }
+}
+
+#homepage .grid--layout-0 .grid__item--side {
+  display: none;
+}
+
+#homepage .grid__item .responsive-image {
+  background: #d4d1cb !important;
+}
+
+#homepage .grid__item-content {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: row;
+  height: 20px;
+}
+
+#homepage .grid__item-content h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+#homepage .grid__item-content p {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+@media (max-width: 960px) {
+  #homepage .grid__item-content {
+    height: auto;
+  }
+
+  #homepage .grid__item-content h2 {
+    font-size: 1rem;
+    margin-left: 0;
+    margin-top: 4px;
+  }
+
+  #homepage .grid__item-content p {
+    display: none;
+  }
+}
+
+.responsive-image {
+  display: block;
+  line-height: 0;
+  padding-top: 83.333%;
+  position: relative;
+  width: 100%;
+}
+
+.responsive-image > img {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Main image scroll animation — CSS sticky track + Locomotive Scroll progress
+   -------------------------------------------------------------------------- */
+
+/* Track is tall enough to give ~200vh of animation budget beyond the image's
+   natural height.  The JS computes the exact distance dynamically. */
+.animation-scroll-track {
+  height: 750vh;
+  position: relative;
+}
+
+/* Nav “About” / #section-background: document Y matches trackDocTop + (trackHeight − 100vh) */
+.hero-scrub-end-anchor {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  top: calc(100% - 100vh);
+  pointer-events: none;
+}
+
+/* During the intro zoom the full track height would show as a huge blank space
+   in the scaled-down view — collapse it to content height until intro ends. */
+body.intro-active .animation-scroll-track {
+  height: auto;
+}
+
+/* Sticky frame pins the image in-view while the invisible track scrolls past.
+   No height or overflow constraints — the image keeps its natural 125% ratio. */
+.animation-sticky-frame {
+  position: sticky;
+  top: 0;
+}
+
+.animation-sticky-frame .grid__animation-wrapper {
+  will-change: width, margin-left;
+  position: relative;
+  z-index: 6;
+}
+
+.main-image-text-panel {
+  height: 100%;
+  opacity: 0;
+  padding: 0 4vw;
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  visibility: hidden;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 7;
+}
+
+@media (max-width: 960px) {
+  /* Collapse the scroll budget — image is static on mobile */
+  .animation-scroll-track {
+    height: auto !important;
+  }
+
+  /* Un-sticky the frame so it flows normally */
+  .animation-sticky-frame {
+    position: static;
+  }
+
+  /* Reset image wrapper to full width, no GSAP transforms */
+  .animation-sticky-frame .grid__animation-wrapper {
+    width: 100% !important;
+    margin-left: 0 !important;
+    will-change: auto;
+  }
+
+  .mobile-hero-bridge {
+    min-height: 26vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: -3vh;
+    padding: 0 10px 6vh;
+    opacity: 1;
+    position: relative;
+    z-index: 8;
+  }
+
+  .mobile-hero-bridge__button {
+    appearance: none;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    will-change: transform, opacity;
+    white-space: nowrap;
+    width: 100%;
+    margin-top: calc(-1vw + 15px);
+    text-align: center;
+  }
+
+  .hero-featured-img,
+  .mobile-hero-bridge__button {
+    will-change: transform;
+  }
+
+  .mobile-hero-bridge__label {
+    font-size: clamp(1px, 32vw, 415px);
+    font-weight: 700;
+    letter-spacing: -0.09em;
+    line-height: 0.8;
+    transform: none;
+    text-transform: none;
+    margin-left: -0.09em;
+  }
+
+  .mobile-hero-bridge__arrow {
+    font-size: clamp(1px, 32vw, 415px);
+    font-weight: 700;
+    letter-spacing: -0.09em;
+    line-height: 0.8;
+    transform: translateY(0.02em);
+  }
+
+  /* Show background panel below the image in normal flow */
+  .main-image-text-panel {
+    position: relative;
+    z-index: 9;
+    width: 100%;
+    left: auto;
+    top: auto;
+    height: auto;
+    overflow-x: clip;
+    overflow-y: visible;
+    pointer-events: auto;
+    padding: 8px 10px 24px;
+  }
+
+  /* Hide bridge, background panel, and projects title during intro zoom */
+  body.intro-active .mobile-hero-bridge,
+  body.intro-active .main-image-text-panel,
+  body.intro-active .mobile-projects-title {
+    display: none !important;
+  }
+
+
+  .projects-scroll-track {
+    display: none !important;
+  }
+
+  .mobile-projects-title {
+    display: block !important;
+  }
+}
+
+/* ── Resume panel (inside main-image-text-panel) ────────────────────────── */
+.resume-panel {
+  width: 100%;
+}
+
+.resume-panel__header {
+  margin-bottom: 16px;
+}
+
+.resume-panel__label {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.resume-entries {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.6vw, 24px);
+}
+
+.resume-entry {
+  display: grid;
+  grid-template-columns: 2.4ch 1fr;
+  column-gap: 22px;
+  row-gap: 10px;
+  align-items: start;
+  padding-top: 10px;
+}
+
+.resume-entry__num {
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  opacity: 1;
+  align-self: start;
+  padding-right: 0.5em;
+  transform: translateY(-0.5em);
+}
+
+.resume-entry__content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resume-entry__role {
+  font-family: "Helvetica";
+  font-size: 3rem;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.resume-entry__meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 1rem;
+  margin-top: 2px;
+}
+
+.resume-entry__company {
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.resume-entry__period {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  opacity: 1;
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .resume-entry__meta {
+    grid-template-columns: 1fr;
+    row-gap: 2px;
+  }
+
+  .resume-entry__period {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+.resume-entry__tag {
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+#site-footer .site-footer__left .footer-dot {
+  background-color: #28282a;
+  border-radius: 50%;
+  display: none;
+  height: 8px;
+  margin-right: 9px;
+  margin-top: 3.5px;
+  width: 8px;
+}
+
+@media (max-width: 960px) {
+  #site-footer .site-footer__left .footer-dot {
+    display: inline-block;
+  }
+}
+
+#site-footer {
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+#site-footer .site-footer__grid {
+  align-items: flex-start;
+  display: flex;
+  flex: 0 1 auto;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+#site-footer .site-footer__left {
+  display: flex;
+  flex-basis: calc(25% - 20px);
+  flex-direction: row;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: calc(25% - 20px);
+}
+
+#site-footer .site-footer__details {
+  display: flex;
+  flex-basis: calc(33.33333% - 20px);
+  flex-direction: row;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: calc(33.33333% - 20px);
+}
+
+#site-footer .site-footer__details .footer-dot {
+  background-color: #28282a;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+  height: 17px;
+  margin-right: 9%;
+  width: 17px;
+}
+
+#site-footer .site-footer__links {
+  display: flex;
+  flex-basis: calc(25% - 20px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: calc(25% - 20px);
+}
+
+#site-footer .site-footer__copyright {
+  flex-basis: calc(16.66667% - 20px);
+  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: calc(16.66667% - 20px);
+}
+
+#site-footer .site-footer__copyright h3 {
+  text-transform: none;
+}
+
+#site-footer .geo-tag {
+  align-items: center;
+  display: inline-flex;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  gap: 8px;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  padding: 4px 10px 3px 0;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+#site-footer .geo-tag span:nth-child(2) {
+  opacity: 0.45;
+}
+
+#site-footer a,
+#site-footer h3 {
+  font-family: "Helvetica";
+  font-size: 2.4rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+#site-footer a {
+  display: inline-block;
+  width: fit-content;
+  transition: opacity 0.35s ease;
+}
+
+#site-footer .site-footer__links a:hover,
+#site-footer .site-footer__links a:focus-visible {
+  opacity: 0.5;
+}
+
+@media (max-width: 960px) {
+  #site-footer {
+    padding: 0 10px;
+  }
+
+  #site-footer .site-footer__grid {
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+
+  #site-footer .site-footer__left {
+    flex-basis: calc(62.5% - 10px);
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: calc(62.5% - 10px);
+  }
+
+  #site-footer .site-footer__details {
+    display: none;
+  }
+
+  #site-footer .site-footer__links {
+    display: none;
+  }
+
+  #site-footer .site-footer__copyright {
+    flex-basis: calc(37.5% - 10px);
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: calc(37.5% - 10px);
+  }
+
+  #site-footer a,
+  #site-footer h3 {
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+  }
+
+  #site-footer {
+    margin-top: -24px;
+  }
+
+  #site-footer .geo-tag {
+    font-size: 1.2rem;
+    gap: 6px;
+    margin-top: 0;
+    padding: 3px 8px 2px 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Featured / Projects — title animation (horizontal scroll) + cards below
+   -------------------------------------------------------------------------- */
+
+/* Sticky track — gives ~150vh of scroll budget for the word-slide animation */
+.projects-scroll-track {
+  height: 250vh;
+  position: relative;
+}
+
+body.intro-active .projects-scroll-track,
+body.intro-active .projects-cards-section,
+body.intro-active .exp-sticky-section,
+body.intro-active .mobile-projects-title {
+  display: none;
+}
+
+.projects-sticky-frame {
+  contain: layout paint;
+  height: 100vh;
+  margin-left: calc((100% - 100vw) / 2);
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  width: 100vw;
+}
+
+/* Runner holds two 100vw word panels; GSAP translates it -100vw */
+.projects-runner {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  will-change: transform;
+}
+
+/* Word panel sizes to its text content so runner.scrollWidth = text + padding.
+   padding-right is the right-side slack that remains visible at animation end. */
+.projects-word-panel {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%;
+  justify-content: flex-end;
+  padding: 6.6vw 0 20px 20px;
+  width: max-content;
+}
+
+.projects-runner-slack {
+  display: none;
+}
+
+.projects-word {
+  display: block;
+  font-size: clamp(1px, 38.89vw, 600px);
+  font-weight: 700;
+  letter-spacing: -0.09em;
+  line-height: 0.8;
+  text-transform: uppercase;
+}
+
+/* Project cards — normal vertical scroll, below the sticky section */
+.projects-cards-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card {
+  border-bottom: 1px solid rgba(40, 40, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:first-child {
+  border-top: 1px solid rgba(40, 40, 42, 0.12);
+}
+
+.project-card__num {
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  opacity: 0.45;
+}
+
+.project-card__title {
+  font-size: clamp(20px, 5.5vw, 90px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.project-card__meta {
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  opacity: 0.55;
+}
+
+.project-card__desc {
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  max-width: 52ch;
+}
+
+.project-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.project-card__tag {
+  border: 1px solid rgba(40, 40, 42, 0.3);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 960px) {
+  .project-card {
+    padding: 16px 10px;
+  }
+}
+
+.mobile-grid-ghost {
+  display: none;
+}
+
+.mobile-scroll-buffer {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .mobile-scroll-buffer {
+    display: block;
+    height: 20px;
+    pointer-events: none;
+  }
+}
+
+.mobile-projects-title {
+  display: none;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 1;
+  padding: 32px 10px 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Featured projects — 4-column CSS grid
+   -------------------------------------------------------------------------- */
+.exp-sticky-section {
+  contain: layout;
+  margin: 80px 20px 0;
+  position: relative;
+}
+
+.exp-sticky-grid {
+  border-top: 1px solid rgba(40, 40, 42, 0.12);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* Explicit row height = one column width, keeping every cell perfectly square */
+  grid-auto-rows: calc((100vw - 40px) / 4);
+}
+
+.exp-sticky-grid--no-top-border {
+  border-top: none;
+}
+
+/* Right border on every cell except col 4 (every 4th child) */
+.exp-sticky-card:not(:nth-child(4n)) {
+  border-right: 1px solid rgba(40, 40, 42, 0.12);
+}
+
+/* ── Project cards ───────────────────────────────────────────────────────── */
+.exp-sticky-card {
+  border-bottom: 1px solid rgba(40, 40, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(14px, 1.8vw, 28px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.exp-sticky-card:not(.exp-sticky-card--blank):hover {
+  z-index: 5;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 14px 28px rgba(40, 40, 42, 0.18);
+}
+
+.exp-sticky-card:not(.exp-sticky-card--blank):not(.exp-sticky-card--pinned):hover {
+  position: relative;
+}
+
+.exp-sticky-card--blank {
+  /* empty square — holds its row height so grid stays aligned */
+}
+
+.exp-sticky-card:not(.exp-sticky-card--blank) {
+  background-color: #edeae4;
+}
+
+.exp-sticky-card--pinned {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+/* AKPsi slide-in cell — outer card stays in place (preserving grid borders),
+   inner content slides horizontally via GSAP */
+
+@media (max-width: 960px) {
+  /* Unified 2-col grid — both sub-grids become display:contents so all cards
+     flow as one continuous sequence: [W][P]/[S][04]/[05][06]/[07][ghost] */
+  .exp-sticky-section {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid rgba(40, 40, 42, 0.12);
+  }
+
+  .exp-sticky-grid {
+    display: contents;
+  }
+
+  /* Reset all desktop right-border rules */
+  .exp-sticky-card {
+    border-right: none !important;
+  }
+
+  /* Col-1 items in the unified flow (by DOM position within each sub-grid):
+     Grid A: Watchdog=child1, Spotify=child8
+     Grid B: AKPsi=child2, NBA=child8  */
+  .exp-sticky-grid:not(.exp-sticky-grid--no-top-border) .exp-sticky-card:nth-child(1),
+  .exp-sticky-grid:not(.exp-sticky-grid--no-top-border) .exp-sticky-card:nth-child(8),
+  .exp-sticky-grid--no-top-border .exp-sticky-card:nth-child(2),
+  .exp-sticky-grid--no-top-border .exp-sticky-card:nth-child(8) {
+    border-right: 1px solid rgba(40, 40, 42, 0.12) !important;
+  }
+
+  /* Taller cells */
+  .exp-sticky-card {
+    min-height: 260px;
+  }
+
+  /* Ghost cell pairs with card 03 (Watchdog) to complete the row in Grid A */
+  .mobile-grid-ghost {
+    display: block !important;
+    background-color: #edeae4;
+    border-bottom: 1px solid rgba(40, 40, 42, 0.12);
+    min-height: 260px;
+  }
+
+  /* Disable sticky pinning on mobile — no room */
+  .exp-sticky-card--pinned {
+    position: static;
+  }
+
+  /* Hide blank spacer cells so content flows naturally in 2 columns */
+  .exp-sticky-card--blank {
+    display: none;
+  }
+
+  .exp-sticky-card__num {
+    font-size: 1.4rem !important;
+  }
+
+  .exp-sticky-card__name {
+    font-size: 1.8rem !important;
+  }
+
+  .exp-sticky-card__category {
+    font-size: 1.2rem !important;
+  }
+
+  .exp-sticky-card__desc {
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.04em !important;
+    line-height: 1.6 !important;
+  }
+
+  .exp-sticky-card__stack {
+    font-size: 1rem !important;
+  }
+
+  .exp-sticky-card__links a {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ── Project card content ────────────────────────────────────────────────── */
+
+.exp-sticky-card__num {
+  align-self: flex-end;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.exp-sticky-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.exp-sticky-card__name {
+  font-size: clamp(13px, 1.9vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.exp-sticky-card__category {
+  font-size: clamp(9px, 1vw, 14px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.exp-sticky-card__desc {
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.exp-sticky-card__stack {
+  font-size: clamp(8px, 0.75vw, 11px);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+.exp-sticky-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.exp-sticky-card__links a {
+  font-size: clamp(8px, 0.8vw, 11px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* ── Project page ─────────────────────────────────────── */
+.proj-page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  background: #edeae4;
+  color: #28282a;
+  padding: 6rem 8vw 14rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.proj-back {
+  display: inline-block;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 5rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.proj-back:hover { opacity: 1; }
+
+.proj-header {
+  margin-bottom: 6rem;
+}
+
+.proj-header__top {
+  display: grid;
+  grid-template-columns: 4ch 1fr;
+  align-items: start;
+  column-gap: 1.6rem;
+  margin-bottom: 4rem;
+}
+
+.proj-number {
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  opacity: 0.45;
+  padding-top: 1.6rem;
+}
+
+.proj-title {
+  font-size: clamp(3.6rem, 8vw, 8.8rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.proj-tagline {
+  grid-column: 2;
+  font-size: clamp(1.4rem, 1.8vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.4;
+  margin-top: 1.6rem;
+  max-width: 720px;
+  opacity: 0.85;
+}
+
+.proj-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin: 0 0 3rem;
+  padding: 0;
+  border-top: 1px solid currentColor;
+  padding-top: 2rem;
+}
+
+.proj-meta__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.proj-meta__label {
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.proj-meta__value {
+  font-size: clamp(1.3rem, 1.5vw, 1.6rem);
+  margin: 0;
+}
+
+.proj-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.proj-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  padding: 0.8rem 1.4rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.proj-cta:hover {
+  background-color: #28282a;
+  color: #edeae4;
+}
+
+@media (max-width: 720px) {
+  .proj-header__top {
+    grid-template-columns: 1fr;
+  }
+  .proj-number {
+    padding-top: 0;
+  }
+  .proj-tagline {
+    grid-column: 1;
+  }
+  .proj-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.proj-section {
+  border-top: 1px solid currentColor;
+  padding: 4rem 0;
+}
+
+.proj-section-label {
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 2.5rem;
+}
+
+.proj-prose {
+  font-size: clamp(1.5rem, 1.8vw, 1.8rem);
+  line-height: 1.7;
+  max-width: 680px;
+}
+.proj-prose--with-img { margin-top: 2rem; }
+
+.proj-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 720px;
+}
+.proj-highlights li {
+  font-size: clamp(1.5rem, 1.8vw, 1.8rem);
+  line-height: 1.6;
+  padding-left: 2.5rem;
+  position: relative;
+}
+.proj-highlights li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+}
+
+.proj-stack-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.proj-stack-chip {
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.proj-links {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.proj-link {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 4px;
+  transition: opacity 0.2s;
+}
+.proj-link:hover { opacity: 0.5; }
+
+.proj-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.proj-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.proj-gallery-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+.proj-iframe-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.proj-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}

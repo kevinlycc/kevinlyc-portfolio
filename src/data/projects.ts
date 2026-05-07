@@ -91,7 +91,7 @@ export const projects: Project[] = [
   category: "Mobile · Edge AI",
   description: "Fully offline AI coaching app delivering real-time form feedback for squats and basketball jump shots. Runs Google LiteRT and MoveNet Lightning on the Snapdragon 8 Elite's Hexagon NPU at 30fps, overlaying a color-coded skeleton — green for correct form, red for issues. Tracks rep count, per-rep scores, and coaching cues. Sessions are recorded and saved for replay with skeleton overlay synced to video. No cloud. No internet. No subscription.",
   duration: "May 2026 — Present",
-  team: "4 Engineers",
+  team: "3 Engineers",
   status: "In Progress",
   stack: ["Google LiteRT", "MoveNet Lightning", "Snapdragon 8 Elite", "Hexagon NPU", "Android"],
   links: [

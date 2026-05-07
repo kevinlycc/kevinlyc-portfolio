@@ -1,7 +1,7 @@
 import { projects } from "@/data/projects";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import IntroCleanup from "./intro-cleanup";
+import BackLink from "./back-link";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -17,7 +17,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <main className="proj-page">
       <IntroCleanup />
-      <Link href="/" className="proj-back">← Back to Work</Link>
+      <BackLink />
 
       <header className="proj-header">
         <div className="proj-header__top">
@@ -65,6 +65,31 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
+      {project.sections.includes("demo") && project.demoUrl && (
+        <section className="proj-section">
+          <p className="proj-section-label">Demo</p>
+          <div className="proj-iframe-wrap">
+            <iframe
+              className="proj-iframe"
+              src={project.demoUrl}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </section>
+      )}
+
+      {project.gallery && project.gallery.length > 0 && (
+        <section className="proj-section">
+          <p className="proj-section-label">Gallery</p>
+          <div className="proj-gallery">
+            {project.gallery.map((src) => (
+              <img key={src} className="proj-gallery-img" src={src} alt="" loading="lazy" />
+            ))}
+          </div>
+        </section>
+      )}
+
       {project.highlights && project.highlights.length > 0 && (
         <section className="proj-section">
           <p className="proj-section-label">Highlights</p>
@@ -94,31 +119,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.architectureNotes && (
             <p className="proj-prose proj-prose--with-img">{project.architectureNotes}</p>
           )}
-        </section>
-      )}
-
-      {project.sections.includes("gallery") && project.gallery && project.gallery.length > 0 && (
-        <section className="proj-section">
-          <p className="proj-section-label">Gallery</p>
-          <div className="proj-gallery">
-            {project.gallery.map((src) => (
-              <img key={src} className="proj-gallery-img" src={src} alt="" />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {project.sections.includes("demo") && project.demoUrl && (
-        <section className="proj-section">
-          <p className="proj-section-label">Demo</p>
-          <div className="proj-iframe-wrap">
-            <iframe
-              className="proj-iframe"
-              src={project.demoUrl}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
         </section>
       )}
     </main>

@@ -20,12 +20,17 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }",
+              "if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }" +
+              "if (location.search.indexOf('return=projects') !== -1) {" +
+              "  var apply = function(){ if (document.body) document.body.classList.add('nav-transitioning'); };" +
+              "  apply();" +
+              "  document.addEventListener('DOMContentLoaded', apply);" +
+              "}",
           }}
         />
       </head>
@@ -34,6 +39,7 @@ export default function RootLayout({
         {children}
         <ElasticCursor />
         <Analytics />
+        <div id="nav-transition-overlay" aria-hidden="true" />
       </body>
     </html>
   );

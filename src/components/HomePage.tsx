@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- parity with static site; optimize later */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -77,6 +77,19 @@ export default function HomePage() {
     smoothScrollTo(projectsScrollTargetRef.current);
   };
 
+  // Drop the textured overlay (synchronously before paint) when returning
+  // from a project page, so the homepage's giant "Kevin" never paints in
+  // the gap between mount and scroll-to-cards. The inline script in
+  // layout.tsx handles full reloads; this handles Next.js client-side nav.
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("return") === "projects") {
+      document.body.classList.remove("nav-revealing");
+      document.body.classList.add("nav-transitioning");
+    }
+  }, []);
+
   // ── Stable year ───────────────────────────────────────────────────────────
   useEffect(() => {
     setYear(new Date().getFullYear());
@@ -84,7 +97,10 @@ export default function HomePage() {
 
   // ── Scroll reset on (re)load ─────────────────────────────────────────────
   useEffect(() => {
+    const isReturningFromProject = () =>
+      new URLSearchParams(window.location.search).get("return") === "projects";
     const reset = () => {
+      if (isReturningFromProject()) return;
       window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
@@ -285,6 +301,18 @@ export default function HomePage() {
     let resizeRaf = 0;
     let removeResizeListener: (() => void) | null = null;
 
+    // Safety: if the overlay is up (return=projects) and the scroll-to logic
+    // never runs, make sure it still fades out so the page isn't permanently covered.
+    const revealSafetyTimer = window.setTimeout(() => {
+      if (document.body.classList.contains("nav-transitioning")) {
+        document.body.classList.remove("nav-transitioning");
+        document.body.classList.add("nav-revealing");
+        window.setTimeout(() => {
+          document.body.classList.remove("nav-revealing");
+        }, 650);
+      }
+    }, 1500);
+
     const useNativeTouchScroll = () => isTouchOrCoarse();
 
     // Resolve when the intro animation has completed
@@ -470,11 +498,42 @@ export default function HomePage() {
           if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
           window.removeEventListener("resize", onResize);
         };
+
+        // If the user is returning from a project page, jump to the cards section
+        // and clear the query param so a refresh doesn't repeat the jump.
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("return") === "projects") {
+          window.history.replaceState({}, "", "/");
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              const target = projectsScrollTargetRef.current;
+              if (target > 0) {
+                try {
+                  locoScroll?.scrollTo?.(target, { immediate: true });
+                } catch {
+                  window.scrollTo(0, target);
+                }
+              }
+              // Lift the curtain — fade out the textured overlay now that
+              // we've snapped to the cards. Remove the class entirely
+              // after the transition finishes so a future back-click
+              // can re-cover the page instantly.
+              requestAnimationFrame(() => {
+                document.body.classList.remove("nav-transitioning");
+                document.body.classList.add("nav-revealing");
+                window.setTimeout(() => {
+                  document.body.classList.remove("nav-revealing");
+                }, 650);
+              });
+            })
+          );
+        }
       });
     });
 
     return () => {
       mounted = false;
+      window.clearTimeout(revealSafetyTimer);
       tl.kill();
       projTl.kill();
       removeResizeListener?.();
@@ -757,7 +816,6 @@ export default function HomePage() {
                 <a href="https://github.com/kevinlycc" target="_blank">GITHUB</a>
                 <a href="https://www.linkedin.com/in/kevin-chhim/" target="_blank">LINKEDIN</a>
                 <a href="mailto:kevinchhim@gmail.com">EMAIL</a>
-                <a href="tel:+5623502455">PHONE</a>
               </nav>
             </div>
           </div>
@@ -850,8 +908,8 @@ export default function HomePage() {
                             <span className="resume-entry__num">01</span>
                             <div className="resume-entry__content">
                               <p className="resume-entry__role">Hardware Engineer Intern</p>
-                              <p className="resume-entry__meta"><span className="resume-entry__company">Ripple Medical</span><span className="resume-entry__period">Jun 2026 — Aug 2026</span></p>
-                              <p className="resume-entry__tag">Hardware design and embedded systems development for medical device applications</p>
+                              <p className="resume-entry__meta"><span className="resume-entry__company">Phillips Connect</span><span className="resume-entry__period">Jun 2026 — Sep 2026</span></p>
+                              <p className="resume-entry__tag">Hardware design and embedded systems development processes for smart trailer technology</p>
                             </div>
                           </div>
 
@@ -868,7 +926,7 @@ export default function HomePage() {
                             <span className="resume-entry__num">03</span>
                             <div className="resume-entry__content">
                               <p className="resume-entry__role">Embedded Systems Engineer</p>
-                              <p className="resume-entry__meta"><span className="resume-entry__company">Micromouse @ UCI</span><span className="resume-entry__period">Sep 2025 — Current</span></p>
+                              <p className="resume-entry__meta"><span className="resume-entry__company">Micromouse @ UCI</span><span className="resume-entry__period">Sep 2025 — Present</span></p>
                               <p className="resume-entry__tag">Embedded firmware and motor control for autonomous maze-solving robot</p>
                             </div>
                           </div>
@@ -941,18 +999,13 @@ export default function HomePage() {
                      <p className="exp-sticky-card__stack">Google LiteRT · MoveNet Lightning · Snapdragon 8 Elite · Hexagon NPU · Android</p>
                     </div>
                   </div>
-                  <div role="link" tabIndex={0} onClick={() => goToProject("pokemon-generator")} onKeyDown={cardKeyDown("pokemon-generator")} className="exp-sticky-card exp-sticky-card--pinned">
+                  <div role="link" tabIndex={0} onClick={() => goToProject("qascade")} onKeyDown={cardKeyDown("qascade")} className="exp-sticky-card exp-sticky-card--pinned">
                     <span className="exp-sticky-card__num">03</span>
                     <div className="exp-sticky-card__body">
-                      <p className="exp-sticky-card__name">Pokemon Generator</p>
-                      <p className="exp-sticky-card__category">Deep Learning</p>
-                      <p className="exp-sticky-card__desc">Generates original Pokemon images and stats via a Conditional GAN.</p>
-                      <p className="exp-sticky-card__stack">Python · PyTorch · CUDA · Flask · Docker</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://original-pokemon-generator-project.fly.dev/" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎ Live</a>
-                        <a href="https://github.com/itsgeorgema/Pokemon-Generator" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">GitHub</a>
-                        <a href="https://www.youtube.com/watch?v=SFcy8QjVgsY" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">Demo</a>
-                      </div>
+                      <p className="exp-sticky-card__name">Qascade</p>
+                      <p className="exp-sticky-card__category">Edge AI · Robotics</p>
+                      <p className="exp-sticky-card__desc">End-to-end pipeline for compressing and deploying vision models to the Qualcomm Hexagon DSP for real-time robotics perception.</p>
+                      <p className="exp-sticky-card__stack">PyTorch · AIMET · ONNX · QNN SDK · Qualcomm AI Hub · Python</p>
                     </div>
                   </div>
                   <div className="exp-sticky-card exp-sticky-card--blank" />
@@ -961,18 +1014,13 @@ export default function HomePage() {
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
-                  <div role="link" tabIndex={0} onClick={() => goToProject("spotify-mood-player")} onKeyDown={cardKeyDown("spotify-mood-player")} className="exp-sticky-card">
+                  <div role="link" tabIndex={0} onClick={() => goToProject("moveo")} onKeyDown={cardKeyDown("moveo")} className="exp-sticky-card">
                     <span className="exp-sticky-card__num">04</span>
                     <div className="exp-sticky-card__body">
-                      <p className="exp-sticky-card__name">Spotify Mood Player</p>
-                      <p className="exp-sticky-card__category">Full-Stack AI</p>
-                      <p className="exp-sticky-card__desc">AI categorizes and plays Spotify songs by mood.</p>
-                      <p className="exp-sticky-card__stack">TypeScript · React · Python · Flask · OpenAI · AWS</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://spotify-mood-player.vercel.app/" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎ Live</a>
-                        <a href="https://github.com/itsgeorgema/spotify-mood-player" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">GitHub</a>
-                        <a href="https://www.youtube.com/watch?v=Iloqfjgzkps" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">Demo</a>
-                      </div>
+                      <p className="exp-sticky-card__name">Moveo Robotic Arm</p>
+                      <p className="exp-sticky-card__category">Embedded · Robotics</p>
+                      <p className="exp-sticky-card__desc">Multi-axis 3D-printed robotic arm with embedded motion control, stepper drivers, and inverse kinematics for precise articulated movement.</p>
+                      <p className="exp-sticky-card__stack">Arduino Mega · RAMPS 1.4 · NEMA 17 · A4988/DRV8825 · Embedded C++</p>
                     </div>
                   </div>
                 </div>
@@ -981,17 +1029,13 @@ export default function HomePage() {
                 <div className="exp-sticky-grid exp-sticky-grid--no-top-border">
 
                   {/* Row 3 */}
-                  <div role="link" tabIndex={0} onClick={() => goToProject("text-based-adventure")} onKeyDown={cardKeyDown("text-based-adventure")} className="exp-sticky-card">
+                  <div role="link" tabIndex={0} onClick={() => goToProject("fpv-drone")} onKeyDown={cardKeyDown("fpv-drone")} className="exp-sticky-card">
                     <span className="exp-sticky-card__num">05</span>
                     <div className="exp-sticky-card__body">
-                      <p className="exp-sticky-card__name">Text-Based Adventure</p>
-                      <p className="exp-sticky-card__category">CLI Game</p>
-                      <p className="exp-sticky-card__desc">Museum heist adventure game inspired by Zork, playable via CLI.</p>
-                      <p className="exp-sticky-card__stack">Java</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://github.com/itsgeorgema/text-based-adventure-game" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎GitHub</a>
-                        <a href="https://www.youtube.com/watch?v=PNoRD2KLa6k" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">Demo</a>
-                      </div>
+                      <p className="exp-sticky-card__name">FPV Quadcopter</p>
+                      <p className="exp-sticky-card__category">Embedded · Hardware</p>
+                      <p className="exp-sticky-card__desc">Modular FPV quadcopter with autonomous GPS missions, ArduPilot flight control, and AI object recognition on live video.</p>
+                      <p className="exp-sticky-card__stack">Matek F405 · ArduPilot · ELRS · ESP32C3 · Raspberry Pi · GPS</p>
                     </div>
                   </div>
                   <div role="link" tabIndex={0} onClick={() => goToProject("esc-website")} onKeyDown={cardKeyDown("esc-website")} className="exp-sticky-card exp-sticky-card--pinned">
@@ -999,12 +1043,8 @@ export default function HomePage() {
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">Official Engineering Student Council Website</p>
                       <p className="exp-sticky-card__category">Full-Stack</p>
-                      <p className="exp-sticky-card__desc">Team website for ESC.</p>
+                      <p className="exp-sticky-card__desc">Official website for UCI Engineering Student Council.</p>
                       <p className="exp-sticky-card__stack">Next.js · React · TypeScript · JavaScript</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://akpsiatucsd.com/" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎ Live</a>
-                        <a href="https://github.com/itsgeorgema/ucsd-akpsi-website" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">GitHub</a>
-                      </div>
                     </div>
                   </div>
                   <div role="link" tabIndex={0} onClick={() => goToProject("portfolio")} onKeyDown={cardKeyDown("portfolio")} className="exp-sticky-card">
@@ -1014,10 +1054,6 @@ export default function HomePage() {
                       <p className="exp-sticky-card__category">Portfolio</p>
                       <p className="exp-sticky-card__desc">Built with Next.js, Three.js, Lenis, GSAP, and WebGL.</p>
                       <p className="exp-sticky-card__stack">Next.js · React · Three.js · Lenis · GSAP · WebGL · TypeScript</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://kevinlyc.github.io/" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎ Live</a>
-                        <a href="https://github.com/kevinlycc/kevinlyc.github.io" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">GitHub</a>
-                      </div>
                     </div>
                   </div>
                   <div className="exp-sticky-card exp-sticky-card--blank" />
@@ -1026,17 +1062,13 @@ export default function HomePage() {
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
-                  <div role="link" tabIndex={0} onClick={() => goToProject("nba-draft-hub")} onKeyDown={cardKeyDown("nba-draft-hub")} className="exp-sticky-card">
+                  <div role="link" tabIndex={0} onClick={() => goToProject("smarttart")} onKeyDown={cardKeyDown("smarttart")} className="exp-sticky-card">
                     <span className="exp-sticky-card__num">08</span>
                     <div className="exp-sticky-card__body">
-                      <p className="exp-sticky-card__name">NBA Draft Hub</p>
-                      <p className="exp-sticky-card__category">Data Dashboard</p>
-                      <p className="exp-sticky-card__desc">Stats and data explorer for the 2025 NBA Draft class.</p>
-                      <p className="exp-sticky-card__stack">React · TypeScript · Vite · Tailwind</p>
-                      <div className="exp-sticky-card__links">
-                        <a href="https://nba-draft-hub-six.vercel.app/" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">↗︎ Live</a>
-                        <a href="https://github.com/itsgeorgema/nba-draft-hub" target="_blank" onClick={e => e.stopPropagation()} className="cursor-can-hover">GitHub</a>
-                      </div>
+                      <p className="exp-sticky-card__name">SmartTart</p>
+                      <p className="exp-sticky-card__category">Embedded · IoT</p>
+                      <p className="exp-sticky-card__desc">IoT-enabled smart toaster with voice-controlled, AI-generated toast profiles over Wi-Fi.</p>
+                      <p className="exp-sticky-card__stack">ESP32 · C++ · Google Gemini · HTTP API · OLED · I2C</p>
                     </div>
                   </div>
                   <div className="mobile-grid-ghost" aria-hidden="true" />
@@ -1067,8 +1099,7 @@ export default function HomePage() {
                   </div>
                   <div className="site-footer__links">
                     <a href="https://www.linkedin.com/in/kevin-chhim/" target="_blank" className="cursor-can-hover">linkedin</a>
-                    <a href="mailto:kevinchhim@gmail.com" className="cursor-can-hover">email</a>
-                    <a href="tel:+5623502455" className="cursor-can-hover">phone</a>
+                    <a href="mailto:kevinlychhim@gmail.com" className="cursor-can-hover">email</a>
                   </div>
                   <div className="site-footer__copyright">
                     <h3>Kevin Chhim</h3>

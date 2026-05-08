@@ -1003,7 +1003,7 @@ export default function HomePage() {
                     <span className="exp-sticky-card__num">03</span>
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">Qascade</p>
-                      <p className="exp-sticky-card__category">Edge AI · Robotics</p>
+                      <p className="exp-sticky-card__category">Robotics · Edge AI</p>
                       <p className="exp-sticky-card__desc">End-to-end pipeline for compressing and deploying vision models to the Qualcomm Hexagon DSP for real-time robotics perception.</p>
                       <p className="exp-sticky-card__stack">PyTorch · AIMET · ONNX · QNN SDK · Qualcomm AI Hub · Python</p>
                     </div>

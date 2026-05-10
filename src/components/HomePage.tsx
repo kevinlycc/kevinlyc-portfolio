@@ -16,7 +16,14 @@ export default function HomePage() {
   const [year, setYear] = useState<number | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const goToProject = (slug: string) => router.push(`/projects/${slug}`);
+  const goToProject = (slug: string) => {
+    // Drop the textured curtain so the homepage's giant "Kevin" never paints
+    // during navigation. The project page's IntroCleanup handles scroll reset
+    // and fades the curtain back out once mounted.
+    document.body.classList.remove("nav-revealing");
+    document.body.classList.add("nav-transitioning");
+    router.push(`/projects/${slug}`);
+  };
   const cardKeyDown = (slug: string) => (e: React.KeyboardEvent) => {
     if (e.key === "Enter") goToProject(slug);
   };
@@ -816,6 +823,7 @@ export default function HomePage() {
                 <a href="https://github.com/kevinlycc" target="_blank">GITHUB</a>
                 <a href="https://www.linkedin.com/in/kevin-chhim/" target="_blank">LINKEDIN</a>
                 <a href="mailto:kevinchhim@gmail.com">EMAIL</a>
+                <a href="/resume.pdf" target="_blank">RESUME</a>
               </nav>
             </div>
           </div>
@@ -987,8 +995,11 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div
+                    role="link"
+                    tabIndex={0}
+                    onClick={() => goToProject("fitform")}
+                    onKeyDown={cardKeyDown("fitform")}
                     className="exp-sticky-card"
-                    onClick={() => router.push('/projects/fitform')}
                     style={{ cursor: 'pointer' }}
                   >
                     <span className="exp-sticky-card__num">02</span>

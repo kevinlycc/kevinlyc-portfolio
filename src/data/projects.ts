@@ -112,7 +112,7 @@ export const projects: Project[] = [
     name: "Qascade",
     category: "Robotics · Edge AI",
     description: "End-to-end pipeline for compressing and deploying vision models to the Qualcomm Hexagon DSP for real-time robotics perception.",
-    tagline: "From trained model to Hexagon DSP — a quantization-aware deployment pipeline for edge robotics inference.",
+    tagline: "A Quantization-Aware Deployment Pipeline for Qualcomm Edge AI",
     role: "Solo Engineer",
     duration: "In Progress",
     team: "Solo",

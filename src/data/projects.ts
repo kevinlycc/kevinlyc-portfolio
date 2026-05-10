@@ -277,7 +277,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "React", "Three.js", "Lenis", "GSAP", "WebGL", "TypeScript"],
     links: [
       { label: "Live", url: "https://kevinlyc.vercel.app/" },
-      { label: "GitHub", url: "https://github.com/kevinlycc/kevinlyc.github.io" },
+      { label: "GitHub", url: "https://github.com/kevinlycc/kevinlyc-portfolio" },
     ],
     gallery: [
       "/assets/projects/portfolio/portfolio1.jpg",

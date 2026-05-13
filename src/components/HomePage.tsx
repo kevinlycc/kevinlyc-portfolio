@@ -1126,8 +1126,7 @@ export default function HomePage() {
                 <div className="closing-row">
                   <div className="closing-section">
                     <p className="closing-quote">&ldquo;And Icarus laughed as he fell — for to fall means to have once soared.&rdquo;</p>
-                    <p className="closing-contact">Thanks for stopping by — I hope you enjoy exploring the rest of my portfolio and the projects I&rsquo;ve been building along the way. I&rsquo;m someone who genuinely enjoys learning, creating, and meeting people with similar passions, and I&rsquo;m still figuring things out one step at a time.</p>
-                    <p className="closing-contact">If you ever want to connect, talk about tech, share ideas, or just say hi, feel free to reach out. I&rsquo;m always open to meeting new people and hearing different perspectives. Thanks again for visiting!</p>
+                    <p className="closing-contact">Currently: compressing vision models for the Hexagon DSP, building Qascade, and looking for embedded/edge AI roles for Summer 2027.</p>
                   </div>
                   <div className="closing-gallery" aria-roledescription="carousel">
                     <div className="closing-gallery__frame">

@@ -4,7 +4,6 @@ import { EB_Garamond } from "next/font/google";
 import "./globals.css";
 import ElasticCursor from "@/components/animations/elasticCursor";
 import CanvasBackground from "@/components/animations/CanvasBackground";
-import ClickSound from "@/components/ClickSound";
 import { Analytics } from "@vercel/analytics/next";
 
 const ebGaramond = EB_Garamond({
@@ -48,7 +47,6 @@ export default function RootLayout({
         <CanvasBackground />
         {children}
         <ElasticCursor />
-        <ClickSound />
         <Analytics />
         <div id="nav-transition-overlay" aria-hidden="true" />
       </body>

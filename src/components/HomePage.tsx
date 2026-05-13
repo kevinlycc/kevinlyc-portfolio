@@ -15,6 +15,20 @@ export default function HomePage() {
   const router = useRouter();
   const [year, setYear] = useState<number | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const galleryImages = [
+    "/assets/galleria1.jpg",
+    "/assets/galleria2.jpg",
+    "/assets/galleria3.jpg",
+    "/assets/galleria4.jpg",
+    "/assets/galleria5.jpg",
+    "/assets/galleria6.jpg",
+    "/assets/galleria7.jpg",
+  ];
+  const prevImage = () =>
+    setGalleryIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
+  const nextImage = () =>
+    setGalleryIndex((i) => (i + 1) % galleryImages.length);
 
   const goToProject = (slug: string) => {
     // Drop the textured curtain so the homepage's giant "Kevin" never paints
@@ -82,6 +96,15 @@ export default function HomePage() {
   const handleProjectsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     smoothScrollTo(projectsScrollTargetRef.current);
+  };
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const footer = document.getElementById("site-footer");
+    const target = footer
+      ? footer.getBoundingClientRect().top + window.scrollY - 40
+      : document.documentElement.scrollHeight - window.innerHeight;
+    smoothScrollTo(target);
   };
 
   // Drop the textured overlay (synchronously before paint) when returning
@@ -184,20 +207,17 @@ export default function HomePage() {
       }, afterHeaderIn));
 
       const mobileTitleOutDuration = 650;
-      const mobileTitleOutDistance = 240;
       const mobileScrollInDuration = 650;
       const mobileFooterFadeLead = 260;
       const mobileFooterFadeDuration = 220;
 
       if (window.innerWidth <= 960) {
-        const bottomTitle  = document.querySelector<HTMLElement>(".title--bottom");
         const siteFooter   = document.querySelector<HTMLElement>("#site-footer");
         const bridgeButton = mobileHeroButtonRef.current;
-        if (bottomTitle) gsap.set(bottomTitle, { clearProps: "opacity,transform" });
         if (siteFooter) gsap.set(siteFooter, { clearProps: "opacity" });
         if (bridgeButton) gsap.set(bridgeButton, { yPercent: -115 });
 
-        // Mobile Phase 1a: fade footer out slightly before title slide
+        // Mobile Phase 1a: fade footer out
         timeouts.push(window.setTimeout(() => {
           if (siteFooter) {
             gsap.to(siteFooter, {
@@ -207,17 +227,6 @@ export default function HomePage() {
             });
           }
         }, afterHeaderIn + 700 - mobileFooterFadeLead));
-
-        // Mobile Phase 1b: slide bottom title down
-        timeouts.push(window.setTimeout(() => {
-          if (bottomTitle) {
-            gsap.to(bottomTitle, {
-              yPercent: mobileTitleOutDistance,
-              duration: mobileTitleOutDuration / 1000,
-              ease: "power3.inOut",
-            });
-          }
-        }, afterHeaderIn + 700));
 
         // Mobile Phase 2: reveal content + reset temporary intro state
         timeouts.push(window.setTimeout(() => {
@@ -229,12 +238,6 @@ export default function HomePage() {
           site.style.removeProperty("--intro-scale");
           site.style.removeProperty("--intro-translate-y");
 
-          const bottomTitle = document.querySelector<HTMLElement>(".title--bottom");
-          if (bottomTitle) {
-            gsap.delayedCall(0.05, () => {
-              gsap.set(bottomTitle, { clearProps: "transform,opacity" });
-            });
-          }
           if (siteFooter) {
             gsap.delayedCall(0.05, () => {
               gsap.set(siteFooter, { clearProps: "opacity" });
@@ -453,7 +456,14 @@ export default function HomePage() {
 
       projTl.clear();
       projTl.to(runner, { x: -scrollBudget, ease: "none", duration: 1 });
-      locoScroll?.resize?.();
+
+      // Try every plausible Lenis/Locomotive resize entrypoint — APIs differ
+      // across versions and the wrapped Lenis instance is sometimes only
+      // reachable via `.lenisInstance` or `.lenis`.
+      const ls: any = locoScroll;
+      ls?.resize?.();
+      ls?.lenisInstance?.resize?.();
+      ls?.lenis?.resize?.();
     };
 
     waitForIntro().then(() => {
@@ -501,10 +511,35 @@ export default function HomePage() {
 
         locomotiveRef.current = locoScroll;
         window.addEventListener("resize", onResize, { passive: true });
+
+        // Re-sync Lenis whenever the document height itself changes
+        // (image decode, font swap, dev-mode CSS edits, etc.) so the user
+        // can always scroll all the way to the footer.
+        const bodyObserver = new ResizeObserver(() => {
+          onResize();
+          // Belt and suspenders: also fire a synthetic window resize so
+          // anything else listening (including Lenis internals) re-reads
+          // the new document height.
+          window.dispatchEvent(new Event("resize"));
+        });
+        bodyObserver.observe(document.body);
+        bodyObserver.observe(document.documentElement);
+
         removeResizeListener = () => {
           if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
           window.removeEventListener("resize", onResize);
+          bodyObserver.disconnect();
         };
+
+        // computeBounds() ran before Lenis existed, so its locoScroll.resize()
+        // was a no-op. Re-run after Lenis init (and again across paints) so
+        // Lenis sees the final document height and lets the page scroll all
+        // the way to the footer.
+        computeBounds();
+        requestAnimationFrame(() => {
+          computeBounds();
+          requestAnimationFrame(computeBounds);
+        });
 
         // If the user is returning from a project page, jump to the cards section
         // and clear the query param so a refresh doesn't repeat the jump.
@@ -768,7 +803,7 @@ export default function HomePage() {
             <a>&nbsp;&nbsp;</a>
             <a href="https://www.linkedin.com/in/kevin-chhim/" className="cursor-can-hover" target="_blank">LINKEDIN</a>
             <a>&nbsp;&nbsp;</a>
-            <a href="mailto:kevinlyc@uci.edu" className="cursor-can-hover">CONTACT</a>
+            <a href="#site-footer" className="cursor-can-hover" onClick={handleContactClick}>CONTACT</a>
             <a>&nbsp;&nbsp;</a>
             <a href="/resume.pdf" className="cursor-can-hover" target="_blank">RESUME</a>
           </nav>
@@ -861,7 +896,7 @@ export default function HomePage() {
                               <span className="hero-image-base" aria-hidden="true" />
                               <img
                                 className="hero-featured-img"
-                                src="/assets/milan.png"
+                                src="/assets/nike2.png"
                                 alt="Featured"
                                 width={1600}
                                 height={2000}
@@ -1088,14 +1123,46 @@ export default function HomePage() {
               </div>
 
 
-                <h2 className="title title--bottom">Kevin</h2>
+                <div className="closing-row">
+                  <div className="closing-section">
+                    <p className="closing-quote">&ldquo;And Icarus laughed as he fell — for to fall means to have once soared.&rdquo;</p>
+                    <p className="closing-contact">Thanks for stopping by — I hope you enjoy exploring the rest of my portfolio and the projects I&rsquo;ve been building along the way. I&rsquo;m someone who genuinely enjoys learning, creating, and meeting people with similar passions, and I&rsquo;m still figuring things out one step at a time.</p>
+                    <p className="closing-contact">If you ever want to connect, talk about tech, share ideas, or just say hi, feel free to reach out. I&rsquo;m always open to meeting new people and hearing different perspectives. Thanks again for visiting!</p>
+                  </div>
+                  <div className="closing-gallery" aria-roledescription="carousel">
+                    <div className="closing-gallery__frame">
+                      <img
+                        key={galleryImages[galleryIndex]}
+                        src={galleryImages[galleryIndex]}
+                        alt=""
+                        className="closing-gallery__img"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="closing-gallery__nav closing-gallery__nav--prev cursor-can-hover"
+                      onClick={prevImage}
+                      aria-label="Previous image"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className="closing-gallery__nav closing-gallery__nav--next cursor-can-hover"
+                      onClick={nextImage}
+                      aria-label="Next image"
+                    >
+                      ›
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <footer id="site-footer">
                 <div className="site-footer__grid">
                   <div className="site-footer__left">
                     <span className="footer-dot" aria-hidden="true" />
-                    <h3>embedded systems · hardware</h3>
+                    <h3>embedded systems · edge ai</h3>
                   </div>
                   <div className="site-footer__details">
                     <span className="footer-dot" aria-hidden="true" />

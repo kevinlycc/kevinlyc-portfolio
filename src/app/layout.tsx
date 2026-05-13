@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { EB_Garamond } from "next/font/google";
 import "./globals.css";
 import ElasticCursor from "@/components/animations/elasticCursor";
 import CanvasBackground from "@/components/animations/CanvasBackground";
 import ClickSound from "@/components/ClickSound";
 import { Analytics } from "@vercel/analytics/next";
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["italic", "normal"],
+  variable: "--font-quote",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Kevin Chhim",
@@ -21,7 +30,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={ebGaramond.variable} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{

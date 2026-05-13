@@ -1175,6 +1175,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="site-footer__links">
+                    <a href="https://github.com/kevinlycc" target="_blank" className="cursor-can-hover">github</a>
                     <a href="https://www.linkedin.com/in/kevin-chhim/" target="_blank" className="cursor-can-hover">linkedin</a>
                     <a href="mailto:kevinlychhim@gmail.com" className="cursor-can-hover">email</a>
                   </div>

@@ -1029,20 +1029,13 @@ export default function HomePage() {
                       <p className="exp-sticky-card__stack">Arduino UNO Q · Qualcomm QRB2210 · STM32U585 · Edge Impulse · Zephyr RTOS · C++</p>
                     </div>
                   </div>
-                  <div
-                    role="link"
-                    tabIndex={0}
-                    onClick={() => goToProject("fitform")}
-                    onKeyDown={cardKeyDown("fitform")}
-                    className="exp-sticky-card"
-                    style={{ cursor: 'pointer' }}
-                  >
+                  <div role="link" tabIndex={0} onClick={() => goToProject("fitform")} onKeyDown={cardKeyDown("fitform")} className="exp-sticky-card">
                     <span className="exp-sticky-card__num">02</span>
                     <div className="exp-sticky-card__body">
-                     <p className="exp-sticky-card__name">FitForm</p>
-                     <p className="exp-sticky-card__category">Mobile · Edge AI</p>
-                     <p className="exp-sticky-card__desc">Fully offline AI coaching app with real-time form feedback for squats and jump shots.</p>
-                     <p className="exp-sticky-card__stack">Google LiteRT · MoveNet Lightning · Snapdragon 8 Elite · Hexagon NPU · Android</p>
+                      <p className="exp-sticky-card__name">FitForm</p>
+                      <p className="exp-sticky-card__category">Mobile · Edge AI</p>
+                      <p className="exp-sticky-card__desc">Fully offline AI coaching app with real-time form feedback for squats and jump shots.</p>
+                      <p className="exp-sticky-card__stack">Google LiteRT · MoveNet Lightning · Snapdragon 8 Elite · Hexagon NPU · Android</p>
                     </div>
                   </div>
                   <div role="link" tabIndex={0} onClick={() => goToProject("qascade")} onKeyDown={cardKeyDown("qascade")} className="exp-sticky-card exp-sticky-card--pinned">
@@ -1054,14 +1047,22 @@ export default function HomePage() {
                       <p className="exp-sticky-card__stack">PyTorch · AIMET · ONNX · QNN SDK · Qualcomm AI Hub · Python</p>
                     </div>
                   </div>
-                  <div className="exp-sticky-card exp-sticky-card--blank" />
+                  <div role="link" tabIndex={0} onClick={() => goToProject("smarttart")} onKeyDown={cardKeyDown("smarttart")} className="exp-sticky-card">
+                    <span className="exp-sticky-card__num">04</span>
+                    <div className="exp-sticky-card__body">
+                      <p className="exp-sticky-card__name">SmartTart</p>
+                      <p className="exp-sticky-card__category">Embedded · IoT</p>
+                      <p className="exp-sticky-card__desc">IoT-enabled smart toaster with voice-controlled, AI-generated toast profiles over Wi-Fi.</p>
+                      <p className="exp-sticky-card__stack">ESP32 · C++ · Google Gemini · HTTP API · OLED · I2C</p>
+                    </div>
+                  </div>
 
                   {/* Row 2 */}
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div role="link" tabIndex={0} onClick={() => goToProject("moveo")} onKeyDown={cardKeyDown("moveo")} className="exp-sticky-card">
-                    <span className="exp-sticky-card__num">04</span>
+                    <span className="exp-sticky-card__num">05</span>
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">Moveo Robotic Arm</p>
                       <p className="exp-sticky-card__category">Embedded · Robotics</p>
@@ -1076,7 +1077,7 @@ export default function HomePage() {
 
                   {/* Row 3 */}
                   <div role="link" tabIndex={0} onClick={() => goToProject("fpv-drone")} onKeyDown={cardKeyDown("fpv-drone")} className="exp-sticky-card">
-                    <span className="exp-sticky-card__num">05</span>
+                    <span className="exp-sticky-card__num">06</span>
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">FPV Quadcopter</p>
                       <p className="exp-sticky-card__category">Embedded · Hardware</p>
@@ -1085,7 +1086,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div role="link" tabIndex={0} onClick={() => goToProject("esc-website")} onKeyDown={cardKeyDown("esc-website")} className="exp-sticky-card exp-sticky-card--pinned">
-                    <span className="exp-sticky-card__num">06</span>
+                    <span className="exp-sticky-card__num">07</span>
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">Official Engineering Student Council Website</p>
                       <p className="exp-sticky-card__category">Full-Stack</p>
@@ -1094,7 +1095,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div role="link" tabIndex={0} onClick={() => goToProject("portfolio")} onKeyDown={cardKeyDown("portfolio")} className="exp-sticky-card">
-                    <span className="exp-sticky-card__num">07</span>
+                    <span className="exp-sticky-card__num">08</span>
                     <div className="exp-sticky-card__body">
                       <p className="exp-sticky-card__name">This Portfolio</p>
                       <p className="exp-sticky-card__category">Portfolio</p>
@@ -1108,15 +1109,7 @@ export default function HomePage() {
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="exp-sticky-card exp-sticky-card--blank" />
-                  <div role="link" tabIndex={0} onClick={() => goToProject("smarttart")} onKeyDown={cardKeyDown("smarttart")} className="exp-sticky-card">
-                    <span className="exp-sticky-card__num">08</span>
-                    <div className="exp-sticky-card__body">
-                      <p className="exp-sticky-card__name">SmartTart</p>
-                      <p className="exp-sticky-card__category">Embedded · IoT</p>
-                      <p className="exp-sticky-card__desc">IoT-enabled smart toaster with voice-controlled, AI-generated toast profiles over Wi-Fi.</p>
-                      <p className="exp-sticky-card__stack">ESP32 · C++ · Google Gemini · HTTP API · OLED · I2C</p>
-                    </div>
-                  </div>
+                  <div className="exp-sticky-card exp-sticky-card--blank" />
                   <div className="mobile-grid-ghost" aria-hidden="true" />
                 </div>
 

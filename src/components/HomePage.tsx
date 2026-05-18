@@ -951,7 +951,7 @@ export default function HomePage() {
                             <span className="resume-entry__num">01</span>
                             <div className="resume-entry__content">
                               <p className="resume-entry__role">Hardware Engineer Intern</p>
-                              <p className="resume-entry__meta"><span className="resume-entry__company">Phillips Connect</span><span className="resume-entry__period">Jun 2026 — Sep 2026</span></p>
+                              <p className="resume-entry__meta"><span className="resume-entry__company">Phillips Connect</span><span className="resume-entry__period">Jun 2026 — Present</span></p>
                               <p className="resume-entry__tag">Hardware design and embedded systems development processes for smart trailer technology</p>
                             </div>
                           </div>

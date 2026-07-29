@@ -950,9 +950,9 @@ export default function HomePage() {
                           <div className="resume-entry">
                             <span className="resume-entry__num">01</span>
                             <div className="resume-entry__content">
-                              <p className="resume-entry__role">Hardware Engineer Intern</p>
+                              <p className="resume-entry__role">Firmware Engineer Intern</p>
                               <p className="resume-entry__meta"><span className="resume-entry__company">Phillips Connect</span><span className="resume-entry__period">Jun 2026 — Present</span></p>
-                              <p className="resume-entry__tag">Hardware design and embedded systems development processes for smart trailer technology</p>
+                              <p className="resume-entry__tag">Firmware design and embedded systems development processes for smart trailer technology</p>
                             </div>
                           </div>
 
@@ -1192,7 +1192,7 @@ export default function HomePage() {
         <span>UCI</span>
       </aside>
       <p className="label-global">
-        Kevin Chhim is a embedded software engineer and student at UC Irvine passionate about embedded systems, VLSI, and hardware design.
+        Kevin Chhim is a embedded software engineer and student at UC Irvine passionate about embedded systems, robotics, and edge AI.
       </p>
     </>
   );

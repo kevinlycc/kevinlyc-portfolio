@@ -969,8 +969,8 @@ export default function HomePage() {
                             <span className="resume-entry__num">03</span>
                             <div className="resume-entry__content">
                               <p className="resume-entry__role">Embedded Systems Engineer</p>
-                              <p className="resume-entry__meta"><span className="resume-entry__company">Micromouse @ UCI</span><span className="resume-entry__period">Sep 2025 — Present</span></p>
-                              <p className="resume-entry__tag">Embedded firmware and motor control for autonomous maze-solving robot</p>
+                              <p className="resume-entry__meta"><span className="resume-entry__company">FSAE Electric Racing @ UCI</span><span className="resume-entry__period">Apr 2024 — Sep 2025</span></p>
+                              <p className="resume-entry__tag">Data acquisition firmware for the electric race car's electronics subteam</p>
                             </div>
                           </div>
 
@@ -1119,7 +1119,7 @@ export default function HomePage() {
                 <div className="closing-row">
                   <div className="closing-section">
                     <p className="closing-quote">&ldquo;And Icarus laughed as he fell — for to fall means to have once soared.&rdquo;</p>
-                    <p className="closing-contact">Currently: compressing vision models for the Hexagon NPU, building Qascade, and looking for embedded/edge AI roles for Summer/ Fall 2027.</p>
+                    <p className="closing-contact">Currently: compressing vision models for the Hexagon NPU, building Qascade, and looking for embedded/edge AI roles for Winter 2027 and Summer 2027.</p>
                   </div>
                   <div className="closing-gallery" aria-roledescription="carousel">
                     <div className="closing-gallery__frame">
